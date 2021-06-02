@@ -31,14 +31,14 @@ class EbookCodewordTemp extends Model
 
         if(!is_null($ebook_id)){
             $query = $this->newQuery()
-                ->where('ci_auth', $request->session()->get('ci_auth'))
-                ->orWhere('ebook_id', $ebook_id)->get();
+            // ->where('ci_auth', $request->session()->get('ci_auth'))
+            ->Where('ebook_id', $ebook_id)
+            ->orwhereNull('ebook_id');
+    
         }else{
             $query = $this->newQuery()
-                ->where('ci_auth', $request->session()->get('ci_auth'));
-                // ->when($request->has('except'), function ($query) use ($request) {
-                //     $query->whereNotIn('ti_id', explode(',', $request->except));
-                // });
+                ->where('ci_auth', $request->session()->get('ci_auth'))
+                ->whereNull('ebook_id')->get();
         }
        
           

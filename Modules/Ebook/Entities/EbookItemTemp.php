@@ -35,8 +35,9 @@ class EbookItemTemp extends Model
             $query = $this->newQuery()
                 ->Select(['items.id', 'items.item_name','items.item_slug','items.item_description','items.item_image as item_image_id','items.created_at','items.updated_at','files.path as item_image'])
                 ->leftJoin('files', 'items.item_image', '=', 'files.id')
-                ->where('ci_auth', $request->session()->get('ci_auth'))
-                ->orWhere('ebook_id', $ebook_id)->get();
+                // ->where('ci_auth', $request->session()->get('ci_auth'))
+                ->Where('ebook_id', $ebook_id)
+                ->orwhereNull('ebook_id');
         }else{
             $query = $this->newQuery()
                 ->Select(['items.id', 'items.item_name','items.item_slug','items.item_description','items.item_image as item_image_id','items.created_at','items.updated_at','files.path as item_image'])

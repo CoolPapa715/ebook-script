@@ -51,13 +51,13 @@
                     
                 </div>
                 <div class="tab-pane fade" id="episodes-enemies" role="tabpanel" aria-labelledby="episodes-enemies-tab">
-                    dddd
+                    
                 </div>
                 <div class="tab-pane fade" id="episodes-battles" role="tabpanel" aria-labelledby="episodes-battles-tab">
-                    eeee
+                    
                 </div>
                 <div class="tab-pane fade" id="episodes-rules" role="tabpanel" aria-labelledby="episodes-rules-tab">
-                    ffff
+                    
                 </div>
             </div>
            

@@ -20,7 +20,7 @@ class AuthorTabs extends CiTabs
             $tab->active();
             $tab->weight(5);
             $tab->fields(['name','is_active','is_verified']);
-            // $tab->view('author::admin.authors.tabs.general', []);
+            $tab->view('author::admin.authors.tabs.general', []);
         });
     } 
     

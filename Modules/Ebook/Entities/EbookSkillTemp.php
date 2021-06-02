@@ -33,8 +33,9 @@ class EbookSkillTemp extends Model
 
         if(!is_null($ebook_id)){
             $query = $this->newQuery()
-                ->where('ci_auth', $request->session()->get('ci_auth'))
-                ->orWhere('ebook_id', $ebook_id)->get();
+                // ->where('ci_auth', $request->session()->get('ci_auth'))
+                ->Where('ebook_id', $ebook_id)
+                ->orwhereNull('ebook_id');
         }
         else{
             $query = $this->newQuery()

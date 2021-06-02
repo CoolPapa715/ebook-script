@@ -34,8 +34,9 @@ class EbookHero extends Model
             $query = $this->newQuery()
                 ->Select(['heroes.id', 'heroes.hero_name','heroes.hero_slug','heroes.hero_description', 'heroes.created_at','heroes.updated_at','files.path as hero_image'])
                 ->leftJoin('files', 'heroes.hero_image', '=', 'files.id')
-                ->where('ci_auth', $request->session()->get('ci_auth'))
-                ->orWhere('ebook_id', $ebook_id);
+                // ->where('ci_auth', $request->session()->get('ci_auth'))
+                ->Where('ebook_id', $ebook_id)
+                ->orwhereNull('ebook_id');
     
         }else{
             $query = $this->newQuery()

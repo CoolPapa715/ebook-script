@@ -72,12 +72,15 @@ class EpisodesController extends Controller
         if(!is_null($ebook_id)){
             return $this->getCurrentModel($table_name)
             ->where('ebook_id', $ebook_id)
+            // ->where('ci_auth', $request->session()->get('ci_auth'))
+            ->orwhereNull('ebook_id')
             ->get();
             
         }
         else{
             return $this->getCurrentModel($table_name)
             ->where('ci_auth', $request->session()->get('ci_auth'))
+            ->whereNull('ebook_id')
             ->get();
         }
         

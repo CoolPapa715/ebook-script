@@ -25,7 +25,6 @@
     @endslot
 @endcomponent
 
-
 @push('scripts')
     <script>
         new DataTable('#authors-table .table', {

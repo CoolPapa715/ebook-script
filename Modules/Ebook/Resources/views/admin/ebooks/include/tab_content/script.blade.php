@@ -97,9 +97,9 @@
 
     function modal_clean() 
     {
-        $(".form-control").val("");
+        $(".episode_modal").find(".form-control").val("");
         $(".record_table").empty();
-        $(".image-holder-wrapper").html('<div class="image-holder placeholder cursor-auto"><i class="fas fa-camera-retro"></i><input type="hidden" name="undefined"></div>')
+        $(".episode_modal").find(".image-holder-wrapper").html('<div class="image-holder placeholder cursor-auto"><i class="fas fa-camera-retro"></i><input type="hidden" name="undefined"></div>')
         $(".custom-control-input").prop('checked',false);
         tinymce.get("hero_description").setContent("");
         tinymce.get("episode_description").setContent("");

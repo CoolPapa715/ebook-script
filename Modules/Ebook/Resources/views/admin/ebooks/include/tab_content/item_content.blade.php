@@ -51,7 +51,7 @@
 @endslot
 @endcomponent
 
-<div class="modal fade" id="items_create_modal" role="dialog">
+<div class="modal fade episode_modal" id="items_create_modal" role="dialog">
     <div class="modal-dialog modal-lg">
        <!-- Modal content-->
       <div class="modal-content">
@@ -85,7 +85,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="skills_create_modal" role="dialog">
+<div class="modal fade episode_modal" id="skills_create_modal" role="dialog">
     <div class="modal-dialog modal-lg">
       <!-- Modal content-->
       <div class="modal-content">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="codewords_create_modal" role="dialog">
+<div class="modal fade episode_modal" id="codewords_create_modal" role="dialog">
     <div class="modal-dialog modal-lg">
       <!-- Modal content-->
       <div class="modal-content">

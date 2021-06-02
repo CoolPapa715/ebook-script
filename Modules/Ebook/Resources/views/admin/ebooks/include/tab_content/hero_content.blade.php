@@ -16,7 +16,7 @@
     @endslot
 @endcomponent
 
-<div class="modal fade" id="heroes_create_modal" role="dialog" style="overflow-x: hidden !important; overflow-y: auto !important;">
+<div class="modal fade episode_modal" id="heroes_create_modal" role="dialog" style="overflow-x: hidden !important; overflow-y: auto !important;">
     <div class="modal-dialog modal-lg">
   
       <!-- Modal content-->

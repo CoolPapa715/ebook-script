@@ -211,8 +211,13 @@ trait HasDefaultActions
         
         $data = array_merge(['tabs' =>$tabs, $resourceName =>$model], $this->getCurrentFormData('create'));
         $viewPath=$this->viewPath;
+  
         Session::forget('ebook_id');
-        $this->getCurrentModel()->readyTocreate();
+
+        if($resourceName=='ebook'){
+            $this->getCurrentModel()->readyTocreate();
+        }
+     
         return view("{$viewPath}.create", $data);
     }
 
@@ -292,6 +297,9 @@ trait HasDefaultActions
         $data = array_merge(['tabs' => $tabs,$resourceName => $entity],$this->getCurrentFormData('edit', $id));
        
         Session::put('ebook_id', $id);
+        if($resourceName=='ebook'){
+            $this->getCurrentModel()->readyTocreate();
+        }
         return view("{$viewPath}.edit", $data);
     }
 

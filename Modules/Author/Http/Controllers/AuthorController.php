@@ -53,6 +53,10 @@ class AuthorController extends Controller
         //dd($query->get());
         $authors=$query->paginate(12)->appends(request()->query());
         
+        
+        
+        
+        
         return view('public.authors.index',compact('authors'));
     }
     
