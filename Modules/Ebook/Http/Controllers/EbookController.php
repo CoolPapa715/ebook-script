@@ -21,6 +21,9 @@ use Modules\Ebook\Http\Requests\StoreEbookRequest;
 use Modules\Ebook\Http\Requests\UpdateEbookRequest;
 
 use Modules\Ebook\Entities\EbookEpisodes;
+use Modules\Ebook\Entities\EbookEpisodesHasItems;
+use Modules\Ebook\Entities\EbookEpisodesHasSkills;
+use Modules\Ebook\Entities\EbookEpisodesHasCodewords;
 use Modules\Ebook\Entities\EbookEpisodesHasNextEpisodes;
 
 use Modules\Ebook\Entities\EbookHero;
@@ -385,15 +388,21 @@ class EbookController extends Controller
             }
           
         }
-        
         $availableFiles=$this->getBookFile($ebook);
-
-        $ebookgame = EbookGame::join('status', 'games.status_id', '=', 'status.id')
-                                ->where('ebook_id',$ebook->id)
-                                ->where('user_id', auth()->user()->id)->first();
-        if(!is_null($ebookgame)){
-            $ebookgame = $ebookgame->attributesToArray();
-            $ebookgameStatus =  $ebookgame['name'];
+        $ebookgameStatus = "You can't play. please login.";
+        if(!is_null(auth()->user())){
+            
+            // dd($ebook);
+            $ebookgame = EbookGame::join('status', 'games.status_id', '=', 'status.id')
+                                    ->where('ebook_id',$ebook->id)
+                                    ->where('user_id', auth()->user()->id)->first();
+            if(!is_null($ebookgame)){
+                $ebookgame = $ebookgame->attributesToArray();
+                $ebookgameStatus =  $ebookgame['name'];
+            }else{
+                $ebookgameStatus = "Not played";
+            }
+            
         }
         
 
@@ -605,6 +614,7 @@ class EbookController extends Controller
 
     public function gameRunNow(Request $request)
     {
+        
         $game_id            = "";
         $hero_info          = [];
         $current_episode    = [];
@@ -617,10 +627,20 @@ class EbookController extends Controller
         $ebook_id = $request->input('ebook_id');
         $ebook_title = $request->input('ebook_title');
         $next_episode_id = $request->input('next_episode_id');
+        $is_final = $request->input('is_final');
 
         $ebookgame = EbookGame::where('ebook_id',$ebook_id)
-                                ->where('user_id',auth()->user()->id)->first();
-                               
+                    ->where('user_id',auth()->user()->id)->first();
+        if(!is_null($is_final)&&!is_null($ebookgame))                     
+        {
+            $ebookgame_info = $ebookgame->attributesToArray();
+            $game_id = $ebookgame_info['id'];
+            $game_id=EbookGame::where('id',$game_id)
+            ->delete();
+            $ebookgame = null;
+        }
+
+         
         if(!is_null($ebookgame))
         {
             $ebookgame_info = $ebookgame->attributesToArray();
@@ -642,9 +662,25 @@ class EbookController extends Controller
                            'episode_id' => $current_episode['id']
                         
                     ]);
-            }
+                        
+                    $episodesHasItems  =  EbookEpisodesHasItems::where('episode_id', $current_episode['id'])->get();  
+                    foreach($episodesHasItems as $key => $value){
+                        EbookGameHasItems::where('item_id',$value['item_id'])
+                                            ->increment('value', $value['value']);
+                    } 
+                    $episodesHasSkills  =  EbookEpisodesHasSkills::where('episode_id', $current_episode['id'])->get();  
+                    foreach($episodesHasSkills as $key => $value){
+                        EbookGameHasSkills::where('skill_id',$value['skill_id'])
+                                            ->increment('value', $value['value']);
+                    }   
+                    $episodesHasCodewords  =  EbookEpisodesHasCodewords::where('episode_id', $current_episode['id'])->get();  
+                    foreach($episodesHasCodewords as $key => $value){
+                        EbookGameHasCodewords::where('codeword_id',$value['codeword_id'])
+                                            ->increment('value', $value['value']);
+                    }
+                 }
             }else{
-                $episode = EbookGameEpisodeSteps::select('ebook_id','number','description','has_death','has_fight','has_dice','is_first','is_last','has_death')
+                $episode = EbookGameEpisodeSteps::select('episodes.id','ebook_id','number','description','has_death','has_fight','has_dice','is_first','is_last','has_death')
                         ->join('episodes', 'game_episodes_steps.episode_id', '=', 'episodes.id')
                         ->where('game_id', $game_id)->first();
         
@@ -656,14 +692,18 @@ class EbookController extends Controller
                 
                     foreach($links as $key => $value){
                         array_push($next_episodes,$value->attributesToArray()); 
-                    }   
+                    } 
+                    
                 }
-            }
+            }   
             
+                
             $Items      =  EbookGameHasItems::select('games_has_items.item_id','items.item_name','items.item_slug','games_has_items.value','files.path')
                                                 ->join('items', 'games_has_items.item_id', '=', 'items.id')
-                                                ->join('files', 'items.item_image', '=', 'files.id')
+                                                ->leftjoin('files', 'items.item_image', '=', 'files.id')
                                                 ->where('games_has_items.game_id', $game_id)->get();
+                                                
+                                               
             foreach($Items as $key => $value){
                 array_push($gamehasItems,$value->attributesToArray()); 
             }
@@ -685,6 +725,19 @@ class EbookController extends Controller
         }else{
 
             $hero = EbookHero::where('heroes.ebook_id', $ebook_id)->first();
+            $episode = EbookEpisodes::where('ebook_id', $ebook_id)
+                                                    ->orderBy('is_first', 'DESC')
+                                                    ->orderBy('number', 'ASC')->first();
+                                                                
+            if(!is_null($episode)){
+                $current_episode = $episode->attributesToArray();
+                
+                $links  =  EbookEpisodesHasNextEpisodes::where('episode_id', $current_episode['id'])->get();
+                foreach($links as $key => $value){
+                    array_push($next_episodes,$value->attributesToArray()); 
+                }   
+                
+            }
          
             if(is_null($hero)){
                 $game_id=EbookGame::create([
@@ -706,8 +759,9 @@ class EbookController extends Controller
 
                 $Items      =  EbookHeroHasItems::select('heroes_has_items.item_id','items.item_name','items.item_slug','heroes_has_items.value','files.path')
                                                 ->join('items', 'heroes_has_items.item_id', '=', 'items.id')
-                                                ->join('files', 'items.item_image', '=', 'files.id')
+                                                ->leftjoin('files', 'items.item_image', '=', 'files.id')
                                                 ->where('hero_id', $hero_id)->get();
+                                             
                 foreach($Items as $key => $value){
                     $value = $value->attributesToArray();
                     
@@ -747,49 +801,37 @@ class EbookController extends Controller
                     ]);
                     array_push($gamehasCodewords,$value); 
                 }
+
+                $episodesHasItems  =  EbookEpisodesHasItems::where('episode_id', $current_episode['id'])->get();  
+                foreach($episodesHasItems as $key => $value){
+                    EbookGameHasItems::where('item_id',$value['item_id'])
+                                        ->increment('value', $value['value']);
+                } 
+                $episodesHasSkills  =  EbookEpisodesHasSkills::where('episode_id', $current_episode['id'])->get();  
+                foreach($episodesHasSkills as $key => $value){
+                    EbookGameHasSkills::where('skill_id',$value['skill_id'])
+                                        ->increment('value', $value['value']);
+                }   
+                $episodesHasCodewords  =  EbookEpisodesHasCodewords::where('episode_id', $current_episode['id'])->get();  
+                foreach($episodesHasCodewords as $key => $value){
+                    EbookGameHasCodewords::where('codeword_id',$value['codeword_id'])
+                                        ->increment('value', $value['value']);
+                }
                
             };
           
-
-            $episode = EbookEpisodes::where('ebook_id', $ebook_id)
-                                                    ->orderBy('is_first', 'DESC')
-                                                    ->orderBy('number', 'ASC')->first();
-                                                                
-            if(!is_null($episode)){
-                $current_episode = $episode->attributesToArray();
-             
-                $links  =  EbookEpisodesHasNextEpisodes::where('episode_id', $current_episode['id'])->get();
-                foreach($links as $key => $value){
-                    array_push($next_episodes,$value->attributesToArray()); 
-                }   
-                EbookGameEpisodeSteps::create([
-                    'game_id' => $game_id,
-                    'episode_id' => $current_episode['id']
-                    
-                ]);
-            }
+         
+            EbookGameEpisodeSteps::create([
+                'game_id' => $game_id,
+                'episode_id' => $current_episode['id']
+                
+            ]);
           
         };
-      
+
         return view('public.ebooks.gameEbook', compact('ebook_id','ebook_title','current_episode','next_episodes','gamehasItems','gamehasSkills','gamehasCodewords'));
     }
-    public function gameAgain(Request $request)
-    {
-        $user_id = auth()->user()->id;
-        $ebook_id = $request->input('ebook_id');
-        $ebookgame = EbookGame::where('ebook_id',$ebook_id)
-                                ->where('user_id', $user_id)->first();
-                             
-        if(!is_null($ebookgame))
-        {
-            $ebookgame_info = $ebookgame->attributesToArray();
-            $game_id = $ebookgame_info['id'];
-            $game_id=EbookGame::where('id',$game_id)
-            ->delete();
-        }
-        return redirect()->route('ebooks.index');
-    }
-
+    
     public function gameFinish(Request $request)
     {
         $user_id = auth()->user()->id;

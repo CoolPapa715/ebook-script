@@ -43,7 +43,7 @@
                 
                 @if(count($current_episode)>0)
                     <div class="row m-b-20" style="min-height: 50vh">
-                        <pre>{!! $current_episode['description']!!}</pre>
+                        <div style="line-height: 2">{!! $current_episode['description']!!}</div>
                     </div>
                     @if( $current_episode['has_dice'])
                         <div class="row m-b-20">
@@ -79,10 +79,11 @@
                         @endpush
                     @elseif ( $current_episode['is_last'])
                         <div class="row m-b-20" style="text-align: center">
-                            <form method="POST" action="{{ route('ebooks.gameAgain') }}" >
+                            <form method="POST" action="{{ route('ebooks.gameRun') }}" >
                                 {{ csrf_field() }}
                                 <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
                                 <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
+                                <input type="hidden" name="is_final" value="1">
                                 <div class="col-md-6"><button type="submit" class="btn btn-primary btn-sm"> Read again</button></div>
                                 
                             </form>
@@ -212,7 +213,7 @@
         </div>
     </section>
     <div class="modal fade In" id="finish_page" role="dialog" >
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg" style="margin-top: 25vh">
           <!-- Modal content-->
           <div class="modal-content">
           
@@ -232,3 +233,4 @@
         </div>
     </div>
 @endsection
+

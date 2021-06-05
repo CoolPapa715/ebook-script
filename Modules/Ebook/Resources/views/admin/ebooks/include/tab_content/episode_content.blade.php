@@ -72,7 +72,7 @@
                                 </select>
                             </div>
                             <div class='col-md-3'>
-                                <input type='number' class="form-control" min="1">
+                                <input type='number' class="form-control" >
                             </div>
                             <div class='col-md-2'>
                                 <a class="btn btn-sm btn-primary record_add" style="color: white" data-type='episode_item'>+</a>

@@ -100,7 +100,7 @@
         $(".episode_modal").find(".form-control").val("");
         $(".record_table").empty();
         $(".episode_modal").find(".image-holder-wrapper").html('<div class="image-holder placeholder cursor-auto"><i class="fas fa-camera-retro"></i><input type="hidden" name="undefined"></div>')
-        $(".custom-control-input").prop('checked',false);
+        $(".episode_modal").find(".custom-control-input").prop('checked',false);
         tinymce.get("hero_description").setContent("");
         tinymce.get("episode_description").setContent("");
         tinymce.get("item_description").setContent("");
@@ -529,83 +529,101 @@
         get_item_option();
         get_skill_option();
         get_codeword_option();
-        get_episode_option();
+
 
         var episode_id = $(this).parent().find(":checkbox").val();
 
         $('#episode_id').val(episode_id);
         $("#death_episode").prop('checked',0);
-        
-        $.ajax({
-            url:"{{route('admin.ebooks.episode_edit')}}",
-            type: 'POST',  
-            data: {  episode_id: episode_id }, 
-            dataType:'json',
-            success: function (json) {   // success callback function
 
-                $('#episode_number').val(json['episode_baseInfo']['number']);
-                tinymce.get("episode_description").setContent(json['episode_baseInfo']['description']);
+        var server_url =  $('.episode_select').attr('data-url');
+
+        $.ajax({
+            url:document.baseURI+server_url,//"{{route('admin.ebooks.items_create')}}",
+            type: 'POST',  
+            dataType:'json',
+            success: function (data) {   // success callback function
+            
+                $('.episode_select').html("");
+                episode_option = [{id:'',text:''}];
+                $.each(data,function(index,json){
+                    episode_option.push({id: json.id, text:json.number});
+                    //$('#codeword_select').append('<option value="'+json.id+'"> '+json.codeword_name+' </option>')
+                });
+                $('.episode_select').select2({placeholder: "Select a next episode",allowClear: true,data:episode_option});
+            },
                 
-                $("#death_episode").prop('checked',json['episode_baseInfo']['has_death']);
-                $("#episode_with_fight").prop('checked',json['episode_baseInfo']['has_fight']);
-                $("#dice").prop('checked',json['episode_baseInfo']['has_dice']);
-                $("#final_episode").prop('checked',json['episode_baseInfo']['is_last']);
-                $("#is_first").prop('checked',json['episode_baseInfo']['is_first']);
-             
-                for(var i =0; i<json['episode_ItemInfo'].length;i++){
-                    var episode_ItemInfo = json['episode_ItemInfo'][i];
-                    var data_type = 'episode_item';
-                    var id        = episode_ItemInfo.item_id;
-                    var text      = episode_ItemInfo.item_name;
-                    var value     = episode_ItemInfo.value;
-                    var table_id  = "#"+data_type+"_table";
-                    draw_table(data_type,id,text,value,table_id);
-                }
-                for(var i =0; i<json['episode_SkillInfo'].length;i++){
-                    var episode_SkillInfo = json['episode_SkillInfo'][i];
-                    var data_type = 'episode_skill';
-                    var id        = episode_SkillInfo.skill_id;
-                    var text      = episode_SkillInfo.skill_name;
-                    var value     = episode_SkillInfo.value;
-                    var table_id  = "#"+data_type+"_table";
-                    draw_table(data_type,id,text,value,table_id);
-                }
-                for(var i =0; i<json['episode_CodewordInfo'].length;i++){
-                    var episode_CodewordInfo = json['episode_CodewordInfo'][i];
-                    var data_type = 'episode_codeword';
-                    var id        = episode_CodewordInfo.codeword_id;
-                    var text      = episode_CodewordInfo.codeword_name;
-                    var value     = episode_CodewordInfo.value;
-                    var table_id  = "#"+data_type+"_table";
-                    draw_table(data_type,id,text,value,table_id);
-                }
-                if(json['episode_baseInfo']['has_dice']){
-                    if(json['episode_nextLinkInfo'].length !=0){
-                        $("#episode_even_linkText").val(json['episode_nextLinkInfo'][0].text);
-                        $("#episode_even_linkID").val(json['episode_nextLinkInfo'][0].next_episode_id).trigger('change');
-                        $("#episode_odd_linkText").val(json['episode_nextLinkInfo'][1].text);
-                        $("#episode_odd_linkID").val(json['episode_nextLinkInfo'][1].next_episode_id).trigger('change');
-                    }
+        }).then(()=>{
+            $.ajax({
+                url:"{{route('admin.ebooks.episode_edit')}}",
+                type: 'POST',  
+                data: {  episode_id: episode_id }, 
+                dataType:'json',
+                success: function (json) {   // success callback function
+
+                    $('#episode_number').val(json['episode_baseInfo']['number']);
+                    tinymce.get("episode_description").setContent(json['episode_baseInfo']['description']);
                     
-                }else{
-                    for(var i =0; i<json['episode_nextLinkInfo'].length;i++){
-                        var episode_nextLinkInfo = json['episode_nextLinkInfo'][i];
-                        var data_type = 'episode_link';
-                        var id        = episode_nextLinkInfo.next_episode_id;
-                        var text      = episode_nextLinkInfo.number;
-                        var value     = episode_nextLinkInfo.text;
+                    $("#death_episode").prop('checked',json['episode_baseInfo']['has_death']);
+                    $("#episode_with_fight").prop('checked',json['episode_baseInfo']['has_fight']);
+                    $("#dice").prop('checked',json['episode_baseInfo']['has_dice']);
+                    $("#final_episode").prop('checked',json['episode_baseInfo']['is_last']);
+                    $("#is_first").prop('checked',json['episode_baseInfo']['is_first']);
+                
+                    for(var i =0; i<json['episode_ItemInfo'].length;i++){
+                        var episode_ItemInfo = json['episode_ItemInfo'][i];
+                        var data_type = 'episode_item';
+                        var id        = episode_ItemInfo.item_id;
+                        var text      = episode_ItemInfo.item_name;
+                        var value     = episode_ItemInfo.value;
                         var table_id  = "#"+data_type+"_table";
                         draw_table(data_type,id,text,value,table_id);
-                    }                   
-                }
+                    }
+                    for(var i =0; i<json['episode_SkillInfo'].length;i++){
+                        var episode_SkillInfo = json['episode_SkillInfo'][i];
+                        var data_type = 'episode_skill';
+                        var id        = episode_SkillInfo.skill_id;
+                        var text      = episode_SkillInfo.skill_name;
+                        var value     = episode_SkillInfo.value;
+                        var table_id  = "#"+data_type+"_table";
+                        draw_table(data_type,id,text,value,table_id);
+                    }
+                    for(var i =0; i<json['episode_CodewordInfo'].length;i++){
+                        var episode_CodewordInfo = json['episode_CodewordInfo'][i];
+                        var data_type = 'episode_codeword';
+                        var id        = episode_CodewordInfo.codeword_id;
+                        var text      = episode_CodewordInfo.codeword_name;
+                        var value     = episode_CodewordInfo.value;
+                        var table_id  = "#"+data_type+"_table";
+                        draw_table(data_type,id,text,value,table_id);
+                    }
+                    if(json['episode_baseInfo']['has_dice']){
+                        if(json['episode_nextLinkInfo'].length !=0){
+                            $("#episode_even_linkText").val(json['episode_nextLinkInfo'][0].text);
+                            $("#episode_even_linkID").val(json['episode_nextLinkInfo'][0].next_episode_id).trigger('change');
+                            $("#episode_odd_linkText").val(json['episode_nextLinkInfo'][1].text);
+                            $("#episode_odd_linkID").val(json['episode_nextLinkInfo'][1].next_episode_id).trigger('change');
+                        }
+                        
+                    }else{
+                        for(var i =0; i<json['episode_nextLinkInfo'].length;i++){
+                            var episode_nextLinkInfo = json['episode_nextLinkInfo'][i];
+                            var data_type = 'episode_link';
+                            var id        = episode_nextLinkInfo.next_episode_id;
+                            var text      = episode_nextLinkInfo.number;
+                            var value     = episode_nextLinkInfo.text;
+                            var table_id  = "#"+data_type+"_table";
+                            draw_table(data_type,id,text,value,table_id);
+                        }                   
+                    }
 
-                check_dice();
-                $("#episodes_create_modal").modal("show");
-               
-            },
+                    check_dice();
+                    $("#episodes_create_modal").modal("show");
+                
+                },
+            });
         });
-
-       
+      
     });
 
     $("#item_save").click(function(){
