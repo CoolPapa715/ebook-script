@@ -64,7 +64,7 @@
                     </div>
 
                     <div class='form-group row'>
-                        <label for="episode_number" class="col-md-4 text-left"> {{clean(trans('ebook::ebooks.form.episode_skill'))}} </label>
+                        <label for="episode_number" class="col-md-4 text-left">  {{clean(trans('ebook::ebooks.form.episode_item'))}}</label>
                         <div class='col-md-8 row' >
                             <div class='col-md-7'>
                                 <select class="form-control item_select" data-url='admin/ebooks/get_items'>
@@ -91,7 +91,7 @@
                     </div>
                     
                     <div class='form-group row'>
-                        <label for="episode_number" class="col-md-4 text-left"> {{clean(trans('ebook::ebooks.form.episode_item'))}} </label>
+                        <label for="episode_number" class="col-md-4 text-left"> {{clean(trans('ebook::ebooks.form.episode_skill'))}} </label>
                         <div class='col-md-8 row' >
                             <div class='col-md-7'>
                                 <select class="form-control skill_select" data-url='admin/ebooks/get_skills'>

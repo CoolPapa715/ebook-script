@@ -66,7 +66,7 @@
                                 @foreach ($next_episodes as $next_link)
                                     <form method="POST" action="{{ route('ebooks.gameRun') }}" @if($next_link['is_even']) id="is_even" @else id="is_odd" @endif>
                                         {{ csrf_field() }}
-                                        <input type="hidden" name="next_episode_id" value="{{$next_link['next_episode_id']}}">
+                                        <input type="hidden" name="gameToken" value="{{$gameToken}}">
                                         <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
                                         <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
                                         <button type="submit" class="btn btn-primary btn-sm"> {{$next_link['text']}}</button>
@@ -81,6 +81,7 @@
                         <div class="row m-b-20" style="text-align: center">
                             <form method="POST" action="{{ route('ebooks.gameRun') }}" >
                                 {{ csrf_field() }}
+                                <input type="hidden" name="gameToken" value="{{$gameToken}}">
                                 <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
                                 <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
                                 <input type="hidden" name="is_final" value="1">
@@ -109,6 +110,7 @@
                         <div class="row m-b-20" style="text-align: center">
                             <form method="POST" action="{{ route('ebooks.gameRun') }}">
                                 {{ csrf_field() }}
+                                <input type="hidden" name="gameToken" value="{{$gameToken}}">
                                 <input type="hidden" name="next_episode_id" value="{{$next_link['next_episode_id']}}">
                                 <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
                                 <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
@@ -233,4 +235,4 @@
         </div>
     </div>
 @endsection
-
+ 
