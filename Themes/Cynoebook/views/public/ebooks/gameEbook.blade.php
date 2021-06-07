@@ -42,12 +42,12 @@
                 </div>
                 
                 @if(count($current_episode)>0)
-                    <div class="row m-b-20" style="min-height: 50vh">
+                    <div class="row m-b-20" style="min-height: 45vh">
                         <div style="line-height: 2">{!! $current_episode['description']!!}</div>
                     </div>
                     @if( $current_episode['has_dice'])
                         <div class="row m-b-20">
-                            <div class="col-md-6">
+                            <div style="width: 20%;margin: auto;border: 1px solid #4e80bf;padding: 10px;background-color: #ecf1f7;">
                                 <div class="dice__scene"  style="margin: auto">
                                     <div id="dice__cube" class="show-front">
                                         <div class="dice__side dice__side--front"  data_num ='1'></div>
@@ -59,45 +59,29 @@
                                     </div>
                                 </div> 
                             </div>
-                            <div class="col-md-6">
-                                <button type="submit" class="btn btn-primary btn-sm" id="dice__btn"> Roll Dice </button>
-                            </div>
-                            <div class="col-md-6" style="display: none" id="Dice_link">
-                                @foreach ($next_episodes as $next_link)
-                                    <form method="POST" action="{{ route('ebooks.gameRun') }}" @if($next_link['is_even']) id="is_even" @else id="is_odd" @endif>
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="gameToken" value="{{$gameToken}}">
-                                        <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
-                                        <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
-                                        <button type="submit" class="btn btn-primary btn-sm"> {{$next_link['text']}}</button>
-                                    </form>
-                                @endforeach
-                            </div>
-                        </div> 
+                        </div>
+                        <div class="row m-b-20" id="Dice_Button" style="text-align:center">
+                            <button type="submit" class="btn btn-primary btn-sm" id="dice__btn" style="width:60%;white-space: initial;" > Roll Dice </button>
+                        </div>
+
+                        <div class="row m-b-20" style="text-align:center;display: none;" id="Dice_link">
+                            @foreach ($next_episodes as $next_link)
+                                <form method="POST" action="{{ route('ebooks.gameRun') }}" @if($next_link['is_even']) id="is_even" @else id="is_odd" @endif>
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="gameToken" value="{{$gameToken}}">
+                                    <input type="hidden" name="next_episode_id" value="{{$next_link['next_episode_id']}}">
+                                    <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
+                                    <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
+                                    <button type="submit" class="btn btn-primary btn-sm" style="width:60%;white-space: initial;"> {{$next_link['text']}}</button>
+                                </form>
+                            @endforeach
+                        </div>
+                    
                         @push('scripts')
                         <script src="{{ Theme::url('public/js/dice.js') }}"></script>
                         @endpush
                     @elseif ( $current_episode['is_last'])
-                        <div class="row m-b-20" style="text-align: center">
-                            <form method="POST" action="{{ route('ebooks.gameRun') }}" >
-                                {{ csrf_field() }}
-                                <input type="hidden" name="gameToken" value="{{$gameToken}}">
-                                <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
-                                <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
-                                <input type="hidden" name="is_final" value="1">
-                                <div class="col-md-6"><button type="submit" class="btn btn-primary btn-sm"> Read again</button></div>
-                                
-                            </form>
-                            <div class="col-md-6">
-                                <form method="POST" action="{{ route('ebooks.gameFinish') }}" >
-                                    {{ csrf_field() }}
-                                    <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
-                                    <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
-                                    <div class="col-md-6"><button type="submit" class="btn btn-primary btn-sm"> Read other ebook</button></div>
-                                </form>
-                               
-                            </div>
-                        </div>
+                        
                         @push('scripts')
                             <script>
                                 $(document).ready(function(){
@@ -114,7 +98,7 @@
                                 <input type="hidden" name="next_episode_id" value="{{$next_link['next_episode_id']}}">
                                 <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
                                 <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
-                                <button type="submit" class="btn btn-primary btn-sm"> {{$next_link['text']}}</button>
+                                <button type="submit" class="btn btn-primary btn-sm" style="width:60%;white-space: initial;"> {{$next_link['text']}}</button>
                             </form>
                         </div>
                         @endforeach
@@ -215,21 +199,50 @@
         </div>
     </section>
     <div class="modal fade In" id="finish_page" role="dialog" >
-        <div class="modal-dialog modal-lg" style="margin-top: 25vh">
+        <div class="modal-dialog modal-sm" style="margin-top: 25vh">
           <!-- Modal content-->
           <div class="modal-content">
           
             <div class="modal-body" style="text-align: center">
                 <pre style="background-color: transparent">
 
-                    <h2><span style="color: red">Congratulations!</span> You've played his book!</h2>
+                    <h2><span style="color: red">Congratulations!</span></h2>
+                            <h3> You've played his book!</h3>
 
-                  <h2> You can re-play this book from the begining </h2>
+                    <h4> You can re-play this book from the begining </h4>
 
-                          <h2>  Or choose another one.</h2>
+                          <h4>  Or choose another one.</h4>
                 </pre>
             </div>
-            
+            <div class="modal-footer" style="border-top: none;">
+                @if(count($current_episode)>0)
+                    @if ( $current_episode['is_last'])
+                        <div class="row m-b-20" style="text-align: center">
+                            <div class="col-sm-6">
+                                <form method="POST" action="{{ route('ebooks.gameRun') }}" >
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="gameToken" value="{{$gameToken}}">
+                                    <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
+                                    <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
+                                    <input type="hidden" name="is_final" value="1">
+                                    <button type="submit" class="btn btn-primary btn-sm" style="width:70%; margin-top:10px;white-space: initial;"> Read again</button>
+                                    
+                                </form>
+                            </div>
+                            <div class="col-sm-6">
+                        
+                                <form method="POST" action="{{ route('ebooks.gameFinish') }}" >
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="ebook_id" value="{{$ebook_id}}">
+                                    <input type="hidden" name="ebook_title" value="{{$ebook_title}}">
+                                    <button type="submit" class="btn btn-primary btn-sm" style="width:70%;margin-top:10px;white-space: initial;"> Read other ebook</button>
+                                </form>
+                            
+                            </div>
+                        </div>
+                    @endif
+                @endif
+            </div>
           </div>
           </form>
         </div>

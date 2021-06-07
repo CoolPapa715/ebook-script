@@ -18,21 +18,25 @@
                         {{ clean(trans('ebook::ebooks.form.tabs.episodes')) }}
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link" id="episodes-enemies-tab" data-toggle="pill" href="#episodes-enemies" role="tab" aria-controls="episodes-enemies" aria-selected="false">
-                        {{ clean(trans('ebook::ebooks.form.tabs.enemies')) }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="episodes-battles-tab" data-toggle="pill" href="#episodes-battles" role="tab" aria-controls="episodes-battles" aria-selected="false">
-                        {{ clean(trans('ebook::ebooks.form.tabs.battles')) }}
-                    </a>
-                </li> --}}
+                
                 <li class="nav-item">
                     <a class="nav-link" id="episodes-rules-tab" data-toggle="pill" href="#episodes-rules" role="tab" aria-controls="episodes-rules" aria-selected="false">
                         {{ clean(trans('ebook::ebooks.form.tabs.rules')) }}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="episodes-fight-tab" data-toggle="pill" href="#episodes-fight" role="tab" aria-controls="episodes-battles" aria-selected="false">
+                        {{ clean(trans('ebook::ebooks.form.tabs.fight')) }}
+                    </a>
+                </li>
+                <li class="nav-item">
+              
+                <li class="nav-item">
+                    <a class="nav-link" id="episodes-enemies-tab" data-toggle="pill" href="#episodes-enemies" role="tab" aria-controls="episodes-enemies" aria-selected="false">
+                        {{ clean(trans('ebook::ebooks.form.tabs.enemies')) }}
+                    </a>
+                </li>
+                 
             </ul>
             <div class="tab-content" id="episodes-tabContent">
                 <div class="tab-pane fade show active" id="episodes-heroes" role="tabpanel" aria-labelledby="episodes-heroes-tab">
@@ -50,15 +54,17 @@
                     @include('ebook::admin.ebooks.include.tab_content.episode_content')
                     
                 </div>
-                <div class="tab-pane fade" id="episodes-enemies" role="tabpanel" aria-labelledby="episodes-enemies-tab">
-                    
-                </div>
-                <div class="tab-pane fade" id="episodes-battles" role="tabpanel" aria-labelledby="episodes-battles-tab">
-                    
-                </div>
+             
                 <div class="tab-pane fade" id="episodes-rules" role="tabpanel" aria-labelledby="episodes-rules-tab">
                     
                 </div>
+                <div class="tab-pane fade" id="episodes-fight" role="tabpanel" aria-labelledby="episodes-fight-tab">
+                   
+                </div>
+                <div class="tab-pane fade" id="episodes-enemies" role="tabpanel" aria-labelledby="episodes-enemies-tab">
+                    
+                </div>
+                
             </div>
            
         </div>

@@ -3,6 +3,10 @@
     .hide_column{display: none}
 </style>
 <script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();   
+    });
+
     var item_option = [];
     var skill_option = [];
     var codeword_option = [];
@@ -150,7 +154,7 @@
         }else{
             html = '<tr class="tr_'+data_type+'">'+
                         '<td style="width: 40%;">'+
-                            '<input type="text"  class="form-control value_input" value="'+value+'" readonly>'+
+                            '<input type="text"  class="form-control value_input" value="'+value+'" readonly maxlength ="30" data-toggle="tooltip"  title="maximum number of characters is 30">'+
                             '</td>'+
                         '<td style="width: 30%;">'+
                             '<input type="hidden" class="form-control id_input"   value="'+id+'" readonly>'+

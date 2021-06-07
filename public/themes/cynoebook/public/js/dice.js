@@ -56,7 +56,8 @@
             }else{
                 $("#is_odd").remove();
             }
-            $("#dice__btn").remove();
+            $("#Dice_Button").remove();
+            
             $("#Dice_link").css("display",'block');
     });
 

@@ -36,6 +36,8 @@ return [
             'enemies' => 'Enemies',
             'battles' => 'Battles',
             'rules' => 'Rules',
+            'fight' => 'Fight',
+            'enemies' => 'Enemies',
         ],
         'tabContent' => [
             'heroes' =>  [

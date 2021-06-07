@@ -111,9 +111,9 @@
                     new DataTable('#episodes_table .table', {
                         columns: [
                             { data: 'checkbox', orderable: false, searchable: false, width: '3%' },
-                            { data: 'episode_number', name: 'episode_number', orderable: false, defaultContent: '' },
+                            { data: 'episode_number', name: 'episode_number', orderable: true, defaultContent: '' },
                             { data: 'episode_description', name: 'episode_description', orderable: false, defaultContent: '' },
-                            { data: 'created', name: 'created_at' },
+                            { data: 'created', name: 'created_at',orderable: false },
                         ],
                     });
                 @endif

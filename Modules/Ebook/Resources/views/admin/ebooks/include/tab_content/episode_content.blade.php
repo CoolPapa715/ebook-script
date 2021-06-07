@@ -149,7 +149,7 @@
                             <div class='col-md-10 row'>
                                 
                                 <div class='col-md-6'>
-                                    <input type='text' class='form-control' placeholder="text"  >
+                                    <input type='text' class='form-control' placeholder="text"  maxlength ="30"  data-toggle="tooltip" title="maximum number of characters is 30">
                                 </div>
                                 <div class='col-md-4'>
                                     <select class='form-control episode_select' data-url='admin/ebooks/get_episodesNum' placeholder='Num'>
@@ -168,10 +168,10 @@
                             <label for="episode_number" class="col-md-2 text-left"> {{clean(trans('ebook::ebooks.form.episode_is_even'))}} </label>
                             
                             <div class='col-md-5'>
-                                <input type='text' class='form-control' placeholder="text" id='episode_even_linkText'>
+                                <input type='text' class='form-control' placeholder="text" id='episode_even_linkText' maxlength ="30" data-toggle="tooltip" title="maximum number of characters is 30">
                             </div>
                             <div class='col-md-4'>
-                                <select class='form-control episode_select' data-url='admin/ebooks/get_episodesNum' placeholder='Num' id='episode_even_linkID'>
+                                <select class='form-control episode_select' data-url='admin/ebooks/get_episodesNum' placeholder='Num' id='episode_even_linkID' >
                                 <option></option>
                                 </select>
                             </div>
@@ -181,7 +181,7 @@
                             <label for="episode_number" class="col-md-2 text-left"> {{clean(trans('ebook::ebooks.form.episode_is_odd'))}} </label>
                            
                             <div class='col-md-5'>
-                                <input type='text' class='form-control' placeholder="text" id='episode_odd_linkText'>
+                                <input type='text' class='form-control' placeholder="text" id='episode_odd_linkText' maxlength ="30" data-toggle="tooltip" title="maximum number of characters is 30">
                             </div>
                             <div class='col-md-4'>
                                 <select class='form-control episode_select' data-url='admin/ebooks/get_episodesNum' placeholder='Num' id='episode_odd_linkID'> 

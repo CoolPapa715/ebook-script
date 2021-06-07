@@ -808,7 +808,6 @@ class EbookController extends Controller
                 foreach($links as $key => $value){
                     array_push($next_episodes,$value->attributesToArray()); 
                 } 
-                
             }
         }   
         
@@ -845,7 +844,8 @@ class EbookController extends Controller
                 'status_id' => 1
             ])->id;
         }
-        else{    
+        else
+        {    
 
             $hero_info = $hero->attributesToArray();
             $hero_id = $hero_info['id'];
@@ -935,16 +935,18 @@ class EbookController extends Controller
                     EbookGameHasCodewords::where('codeword_id',$value['codeword_id'])
                                         ->increment('value', $value['value']);
                 }
+
+                EbookGameEpisodeSteps::create([
+                    'game_id' => $game_id,
+                    'episode_id' => $current_episode['id']
+                    
+                ]);
             }
             
            
         }
 
-        EbookGameEpisodeSteps::create([
-            'game_id' => $game_id,
-            'episode_id' => $current_episode['id']
-            
-        ]);
+        
         $gameEpisodeInfo['current_episode']   =  $current_episode;
         $gameEpisodeInfo['next_episodes']     =  $next_episodes;
         $gameEpisodeInfo['game_id']     =  $game_id;
